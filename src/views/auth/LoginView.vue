@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { localizeApiError } from '@/i18n/errors'
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
+const route = useRoute()
 const auth = useAuthStore()
 const { t } = useI18n()
 
@@ -23,10 +24,18 @@ const isTOTPEnabled = ref(false)
 onMounted(async () => {
   // Redirect to home if already logged in
   if (auth.isAuthenticated) {
-    router.push('/')
+    router.push(afterLoginPath())
     return
   }
 })
+
+function afterLoginPath() {
+  const redirect = route.query.redirect
+  if (typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) {
+    return redirect
+  }
+  return '/'
+}
 
 useHead({
   title: () => t('auth.login.title'),
@@ -57,14 +66,14 @@ async function handlePasswordLogin() {
       passkeyOptions.value = null
     }
   } else if (result.success && !result.requires2FA) {
-    router.push('/')
+    router.push(afterLoginPath())
   }
 }
 
 async function verifyWithTOTP() {
   const result = await auth.verifyTOTP(pendingAuthId.value, totpCode.value)
   if (result.success) {
-    router.push('/')
+    router.push(afterLoginPath())
   }
 }
 
@@ -142,7 +151,7 @@ async function verifyWithPasskey() {
     const data = await res.json()
     if (res.ok && data.success) {
       auth.setSessionData(data.sessionId, data.user)
-      router.push('/')
+      router.push(afterLoginPath())
     } else {
       auth.error = localizeApiError(data.error, 'auth.login.passkeyFailed')
     }
@@ -224,7 +233,7 @@ async function loginWithPasskey() {
     const data = await res.json()
     if (res.ok && data.success) {
       auth.setSessionData(data.sessionId, data.user)
-      router.push('/')
+      router.push(afterLoginPath())
     } else {
       auth.error = localizeApiError(data.error, 'auth.login.passkeyFailed')
     }

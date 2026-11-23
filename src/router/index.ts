@@ -111,7 +111,25 @@ const router = createRouter({
           component: () => import('@/views/auth/SecurityView.vue'),
           meta: { titleKey: 'auth.security.title' },
         },
+        {
+          path: 'oidc',
+          name: 'settings-oidc',
+          component: () => import('@/views/auth/OidcClientsView.vue'),
+          meta: { titleKey: 'auth.oidc.title' },
+        },
       ],
+    },
+    {
+      path: '/oauth/consent',
+      name: 'oauth-consent',
+      component: () => import('@/views/auth/OidcConsentView.vue'),
+      meta: { index: 107 },
+    },
+    {
+      path: '/oauth/authorize',
+      name: 'oauth-authorize',
+      component: () => import('@/views/auth/OidcAuthorizeView.vue'),
+      meta: { index: 108 },
     },
   ],
   scrollBehavior(to, _, savedPosition) {

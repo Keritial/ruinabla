@@ -39,6 +39,10 @@ function logout() {
             <span class="icon">🔒</span>
             <span>{{ t('auth.security.title') }}</span>
           </RouterLink>
+          <RouterLink to="/settings/oidc" class="nav-item">
+            <span class="icon">◎</span>
+            <span>{{ t('auth.oidc.title') }}</span>
+          </RouterLink>
         </div>
       </nav>
 

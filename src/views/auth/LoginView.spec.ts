@@ -4,6 +4,7 @@ import i18n from '@/i18n'
 import LoginView from './LoginView.vue'
 
 const push = vi.fn()
+const route = { query: {} as Record<string, unknown> }
 const authStore = {
   loading: false,
   error: null as string | null,
@@ -19,6 +20,7 @@ vi.mock('@unhead/vue', () => ({
 
 vi.mock('vue-router', () => ({
   useRouter: () => ({ push }),
+  useRoute: () => route,
 }))
 
 vi.mock('@/stores/authStore', () => ({
@@ -33,6 +35,7 @@ describe('LoginView', () => {
     authStore.login.mockReset()
     authStore.verifyTOTP.mockReset()
     authStore.setSessionData.mockReset()
+    route.query = {}
     push.mockReset()
     globalThis.fetch = vi.fn()
   })
@@ -78,6 +81,52 @@ describe('LoginView', () => {
     await flushPromises()
 
     expect(authStore.verifyTOTP).toHaveBeenCalledWith('pending-1', '123456')
+    expect(push).toHaveBeenCalledWith('/')
+  })
+
+  it('returns to an internal OIDC consent route after login', async () => {
+    route.query.redirect = '/oauth/consent?request_id=request-1'
+    authStore.login.mockResolvedValue({ success: true, requires2FA: false })
+
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [i18n],
+        stubs: {
+          RouterLink: {
+            template: '<a><slot /></a>',
+          },
+        },
+      },
+    })
+
+    await wrapper.get('input[type="email"]').setValue('login@example.com')
+    await wrapper.get('input[type="password"]').setValue('password123')
+    await wrapper.get('form').trigger('submit.prevent')
+    await flushPromises()
+
+    expect(push).toHaveBeenCalledWith('/oauth/consent?request_id=request-1')
+  })
+
+  it('does not follow protocol-relative login redirects', async () => {
+    route.query.redirect = '//attacker.example/path'
+    authStore.login.mockResolvedValue({ success: true, requires2FA: false })
+
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [i18n],
+        stubs: {
+          RouterLink: {
+            template: '<a><slot /></a>',
+          },
+        },
+      },
+    })
+
+    await wrapper.get('input[type="email"]').setValue('login@example.com')
+    await wrapper.get('input[type="password"]').setValue('password123')
+    await wrapper.get('form').trigger('submit.prevent')
+    await flushPromises()
+
     expect(push).toHaveBeenCalledWith('/')
   })
 })
