@@ -154,3 +154,35 @@ CREATE TABLE IF NOT EXISTS oidc_access_tokens (
   FOREIGN KEY (client_id) REFERENCES oidc_clients(client_id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS krtl_login_attempts (
+  state_hash TEXT PRIMARY KEY,
+  code_verifier TEXT NOT NULL,
+  nonce TEXT NOT NULL,
+  redirect_path TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  mode TEXT NOT NULL DEFAULT 'login',
+  user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+  created_at INTEGER NOT NULL DEFAULT (unixepoch())
+);
+
+CREATE TABLE IF NOT EXISTS external_accounts (
+  provider TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  email TEXT,
+  created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+  updated_at INTEGER NOT NULL DEFAULT (unixepoch()),
+  PRIMARY KEY (provider, subject),
+  UNIQUE (provider, user_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS auth_handoff_tokens (
+  token_hash TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  redirect_path TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

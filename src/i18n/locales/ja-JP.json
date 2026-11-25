@@ -177,6 +177,9 @@
       "title": "過ちを繰り返す",
       "eyebrow": "続行するにはログインしてください",
       "usePasskey": "Passkey でログイン",
+      "useKrtl": "krtl.net でログイン",
+      "krtlLoggingIn": "krtl.net に移動中...",
+      "krtlCallbackTitle": "krtl.net ログインを完了しています",
       "orUsePassword": "またはパスワードでログイン",
       "email": "メールアドレス",
       "password": "パスワード",
@@ -201,6 +204,8 @@
       "passkeyFailed": "Passkey 検証に失敗しました",
       "messages": {
         "failed": "ログインに失敗しました",
+        "krtlFailed": "krtl.net ログインに失敗しました。もう一度お試しください。",
+        "krtlInvalidCallback": "krtl.net からのログイン情報が無効です。",
         "noCredential": "認証情報が見つかりません",
         "passkeyOptionsFailed": "Passkey オプションの取得に失敗しました"
       }
@@ -308,6 +313,40 @@
         "consentFailed": "認可結果を送信できませんでした",
         "copied": "コピーしました",
         "copyFailed": "コピーできません。クリップボードの権限を確認してください。"
+      }
+    },
+    "externalAccounts": {
+      "title": "連携済みアカウント",
+      "subtitle": "このサイトへのログインに使う外部 ID プロバイダーを管理します。",
+      "connectedTitle": "連携済みのログイン方法",
+      "connectedDescription": "最後のログイン方法を解除する前に、ローカルパスワードを設定してください。",
+      "connectKrtl": "krtl.net を連携",
+      "empty": "外部アカウントは連携されていません。",
+      "connectedAt": "連携日: {date}",
+      "remove": "連携解除",
+      "messages": {
+        "loadFailed": "連携済みアカウントを読み込めませんでした",
+        "confirmRemove": "{provider} の連携を解除しますか？このアカウントでログインできなくなります。",
+        "removeFailed": "アカウントの連携を解除できませんでした",
+        "removed": "アカウントの連携を解除しました",
+        "lastLoginMethod": "これが唯一のログイン方法です。解除する前にローカルパスワードを設定してください。",
+        "reauthRequired": "セキュリティ設定で再認証してから連携を解除してください。",
+        "connectFailed": "krtl.net との連携を開始できませんでした。"
+      },
+      "deleteAccount": {
+        "title": "アカウントを削除",
+        "description": "shikoch.in アカウント、セッション、関連データを完全に削除します。この操作は取り消せません。",
+        "start": "アカウントを削除",
+        "warning": "削除後、アカウントとコンテンツは復元できません。必要なデータを保存したことを確認してください。",
+        "confirmLabel": "確認のため DELETE と入力",
+        "confirmPlaceholder": "DELETE",
+        "confirm": "アカウントを完全に削除",
+        "deleting": "削除中...",
+        "messages": {
+          "failed": "アカウントを削除できませんでした。もう一度お試しください。",
+          "reauthRequired": "セキュリティ設定で再認証してからアカウントを削除してください。",
+          "deleted": "アカウントを削除しました。"
+        }
       }
     },
     "security": {

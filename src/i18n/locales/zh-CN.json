@@ -177,6 +177,9 @@
       "title": "重蹈覆辙",
       "eyebrow": "登录以继续",
       "usePasskey": "使用 Passkey 登录",
+      "useKrtl": "使用 krtl.net 登录",
+      "krtlLoggingIn": "正在跳转到 krtl.net...",
+      "krtlCallbackTitle": "正在完成 krtl.net 登录",
       "orUsePassword": "或使用密码登录",
       "email": "邮箱",
       "password": "密码",
@@ -201,6 +204,8 @@
       "passkeyFailed": "Passkey 验证失败",
       "messages": {
         "failed": "登录失败",
+        "krtlFailed": "krtl.net 登录失败，请重试",
+        "krtlInvalidCallback": "krtl.net 返回的登录信息无效",
         "noCredential": "未搜索到凭据",
         "passkeyOptionsFailed": "获取 Passkey 选项失败"
       }
@@ -308,6 +313,40 @@
         "consentFailed": "提交授权结果失败",
         "copied": "已复制",
         "copyFailed": "复制失败，请检查浏览器剪贴板权限"
+      }
+    },
+    "externalAccounts": {
+      "title": "已连接账户",
+      "subtitle": "管理用于登录此网站的外部身份提供方。",
+      "connectedTitle": "已连接的登录方式",
+      "connectedDescription": "解绑最后一个登录方式前，需要先设置本地密码。",
+      "connectKrtl": "连接 krtl.net",
+      "empty": "尚未连接外部账户。",
+      "connectedAt": "连接于 {date}",
+      "remove": "解绑",
+      "messages": {
+        "loadFailed": "无法加载已连接账户",
+        "confirmRemove": "确定要解绑 {provider} 吗？此操作会停止使用该账户登录。",
+        "removeFailed": "无法解绑账户",
+        "removed": "账户已解绑",
+        "lastLoginMethod": "这是你唯一的登录方式。请先设置本地密码再解绑。",
+        "reauthRequired": "请先前往安全设置重新验证身份，再解除账号关联。",
+        "connectFailed": "无法开始连接 krtl.net。"
+      },
+      "deleteAccount": {
+        "title": "删除账户",
+        "description": "永久删除你的 shikoch.in 账户、登录会话和关联数据。此操作无法撤销。",
+        "start": "删除我的账户",
+        "warning": "删除后将无法恢复账户或其内容。请确认你已保存需要保留的数据。",
+        "confirmLabel": "输入 DELETE 以确认",
+        "confirmPlaceholder": "DELETE",
+        "confirm": "永久删除账户",
+        "deleting": "正在删除…",
+        "messages": {
+          "failed": "无法删除账户，请稍后重试。",
+          "reauthRequired": "请先前往安全设置重新验证身份，再删除账户。",
+          "deleted": "账户已删除。"
+        }
       }
     },
     "security": {

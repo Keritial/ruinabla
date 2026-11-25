@@ -20,6 +20,7 @@ const pendingAuthId = ref('')
 const hasPasskeys = ref(false)
 const passkeyOptions = ref<any>(null)
 const isTOTPEnabled = ref(false)
+const krtlLoading = ref(false)
 
 onMounted(async () => {
   // Redirect to home if already logged in
@@ -35,6 +36,13 @@ function afterLoginPath() {
     return redirect
   }
   return '/'
+}
+
+function startKrtlLogin() {
+  const redirect = afterLoginPath()
+  sessionStorage.setItem('krtlLoginRedirect', redirect)
+  krtlLoading.value = true
+  window.location.assign(`/api/auth/krtl/start?redirect=${encodeURIComponent(redirect)}`)
 }
 
 useHead({
@@ -253,6 +261,15 @@ async function loginWithPasskey() {
       <div v-if="!show2FAOptions" class="passkey-login">
         <button
           type="button"
+          @click="startKrtlLogin"
+          class="krtl-btn"
+          :disabled="auth.loading || krtlLoading"
+        >
+          {{ krtlLoading ? $t('auth.login.krtlLoggingIn') : $t('auth.login.useKrtl') }}
+        </button>
+
+        <button
+          type="button"
           @click="loginWithPasskey"
           class="passkey-btn"
           :disabled="auth.loading"
@@ -407,6 +424,31 @@ async function loginWithPasskey() {
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s ease;
+}
+
+.krtl-btn {
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ruins-text);
+  cursor: pointer;
+  border: 1px solid var(--ruins-border);
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.krtl-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: var(--ruins-accent);
+  transform: translateY(-2px);
+}
+
+.krtl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .passkey-btn:hover:not(:disabled) {

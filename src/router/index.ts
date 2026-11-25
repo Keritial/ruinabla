@@ -76,6 +76,12 @@ const router = createRouter({
       meta: { index: 101 },
     },
     {
+      path: '/oidc/callback',
+      name: 'krtl-oidc-callback',
+      component: () => import('@/views/auth/KrtlCallbackView.vue'),
+      meta: { index: 109 },
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('@/views/auth/RegisterView.vue'),
@@ -116,6 +122,12 @@ const router = createRouter({
           name: 'settings-oidc',
           component: () => import('@/views/auth/OidcClientsView.vue'),
           meta: { titleKey: 'auth.oidc.title' },
+        },
+        {
+          path: 'accounts',
+          name: 'settings-accounts',
+          component: () => import('@/views/auth/ExternalAccountsView.vue'),
+          meta: { titleKey: 'auth.externalAccounts.title' },
         },
       ],
     },

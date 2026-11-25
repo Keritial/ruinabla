@@ -32,6 +32,9 @@ const passkeyName = ref('')
 // Password confirmation
 const showPasswordModal = ref(false)
 const pendingSensitiveAction = ref<'disable-totp' | 'regenerate-backup-codes' | null>(null)
+const showDeleteConfirmation = ref(false)
+const deleteConfirmation = ref('')
+const deletingAccount = ref(false)
 
 const reauthModalTitle = computed(() =>
   pendingSensitiveAction.value === 'regenerate-backup-codes'
@@ -189,6 +192,40 @@ async function handlePasswordConfirm(password: string) {
 function closePasswordModal() {
   showPasswordModal.value = false
   pendingSensitiveAction.value = null
+}
+
+function cancelAccountDeletion() {
+  showDeleteConfirmation.value = false
+  deleteConfirmation.value = ''
+}
+
+async function deleteAccount() {
+  if (deleteConfirmation.value !== 'DELETE' || deletingAccount.value) return
+
+  deletingAccount.value = true
+  try {
+    const response = await fetch('/api/auth/account', {
+      method: 'DELETE',
+      headers: { Authorization: auth.getAuthHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirmation: deleteConfirmation.value }),
+    })
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      const key =
+        response.status === 401 || response.status === 409
+          ? 'auth.externalAccounts.deleteAccount.messages.reauthRequired'
+          : 'auth.externalAccounts.deleteAccount.messages.failed'
+      throw new Error(data.error || t(key))
+    }
+
+    auth.clearSessionData()
+    toast.success(t('auth.externalAccounts.deleteAccount.messages.deleted'))
+    await router.replace('/')
+  } catch (error) {
+    toast.error((error as Error).message)
+  } finally {
+    deletingAccount.value = false
+  }
 }
 
 async function loadPasskeys() {
@@ -457,6 +494,54 @@ async function deletePasskey(id: string) {
       </div>
     </section>
 
+    <section class="settings-section danger-zone">
+      <div class="section-header">
+        <div>
+          <h2>{{ $t('auth.externalAccounts.deleteAccount.title') }}</h2>
+          <p class="section-desc">{{ $t('auth.externalAccounts.deleteAccount.description') }}</p>
+        </div>
+      </div>
+
+      <button
+        v-if="!showDeleteConfirmation"
+        class="danger-link"
+        type="button"
+        @click="showDeleteConfirmation = true"
+      >
+        {{ $t('auth.externalAccounts.deleteAccount.start') }}
+      </button>
+      <form v-else class="delete-confirmation" @submit.prevent="deleteAccount">
+        <p class="delete-warning">{{ $t('auth.externalAccounts.deleteAccount.warning') }}</p>
+        <label for="delete-account-confirmation">{{
+          $t('auth.externalAccounts.deleteAccount.confirmLabel')
+        }}</label>
+        <input
+          id="delete-account-confirmation"
+          v-model="deleteConfirmation"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          :placeholder="$t('auth.externalAccounts.deleteAccount.confirmPlaceholder')"
+        />
+        <div class="confirmation-actions">
+          <button
+            class="danger-link"
+            type="submit"
+            :disabled="deleteConfirmation !== 'DELETE' || deletingAccount"
+          >
+            {{
+              deletingAccount
+                ? $t('auth.externalAccounts.deleteAccount.deleting')
+                : $t('auth.externalAccounts.deleteAccount.confirm')
+            }}
+          </button>
+          <button type="button" :disabled="deletingAccount" @click="cancelAccountDeletion">
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </form>
+    </section>
+
     <!-- Password Confirmation Modal -->
     <PasswordConfirmModal
       :show="showPasswordModal"
@@ -499,6 +584,41 @@ async function deletePasskey(id: string) {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+.danger-zone {
+  border: 1px solid color-mix(in srgb, var(--ruins-danger) 55%, transparent);
+}
+.delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.delete-warning {
+  margin: 0;
+  color: var(--ruins-danger);
+}
+.delete-confirmation label {
+  color: var(--ruins-muted);
+  font-size: 0.9rem;
+}
+.delete-confirmation input {
+  width: min(100%, 360px);
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--ruins-border);
+  background: transparent;
+  color: var(--ruins-text);
+  font: inherit;
+}
+.delete-confirmation input:focus {
+  outline: 2px solid var(--ruins-danger);
+  outline-offset: 2px;
+}
+.confirmation-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .section-header {

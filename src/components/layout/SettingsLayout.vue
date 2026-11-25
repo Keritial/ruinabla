@@ -43,6 +43,10 @@ function logout() {
             <span class="icon">◎</span>
             <span>{{ t('auth.oidc.title') }}</span>
           </RouterLink>
+          <RouterLink to="/settings/accounts" class="nav-item">
+            <span class="icon">↗</span>
+            <span>{{ t('auth.externalAccounts.title') }}</span>
+          </RouterLink>
         </div>
       </nav>
 

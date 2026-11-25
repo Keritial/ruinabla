@@ -45,6 +45,16 @@ node -e "const { generateKeyPairSync } = require('node:crypto'); console.log(JSO
 
 Set the generated value with `npx wrangler pages secret put OIDC_PRIVATE_JWK`; use the same private JWK in `.dev.vars` for local Pages development. Users can register confidential clients in Settings > OIDC clients. The provider supports the authorization code flow with mandatory S256 PKCE, `openid` and `email` scopes, and exact registered redirect URI matching.
 
+The site can also sign users in through krtl.net. Set the credentials from the krtl OAuth client registration as Pages secrets (never commit them), then apply the migration:
+
+```sh
+npx wrangler pages secret put KRTL_CLIENT_ID
+npx wrangler pages secret put KRTL_CLIENT_SECRET
+npx wrangler d1 execute ruinabla-db --remote --file=migrations/004_add_krtl_login.sql
+```
+
+The registered callback URL is `https://shikoch.in/oidc/callback`. The integration uses S256 PKCE, nonce and state validation, verifies krtl's RS256 ID token, and requires a verified email before creating or linking a local account.
+
 ## License
 
 Code: Unlicense

@@ -177,6 +177,9 @@
       "title": "Repeat the Error",
       "eyebrow": "Login to continue",
       "usePasskey": "Login with Passkey",
+      "useKrtl": "Login with krtl.net",
+      "krtlLoggingIn": "Redirecting to krtl.net...",
+      "krtlCallbackTitle": "Finishing krtl.net login",
       "orUsePassword": "Or login with password",
       "email": "Email",
       "password": "Password",
@@ -201,6 +204,8 @@
       "passkeyFailed": "Passkey verification failed",
       "messages": {
         "failed": "Login failed",
+        "krtlFailed": "krtl.net login failed. Please try again.",
+        "krtlInvalidCallback": "The login response from krtl.net is invalid.",
         "noCredential": "No credential returned",
         "passkeyOptionsFailed": "Failed to get passkey options"
       }
@@ -311,6 +316,40 @@
         "consentFailed": "Could not submit your authorization decision",
         "copied": "Copied",
         "copyFailed": "Could not copy. Check clipboard permissions."
+      }
+    },
+    "externalAccounts": {
+      "title": "Connected Accounts",
+      "subtitle": "Manage external identity providers used to sign in to this site.",
+      "connectedTitle": "Connected sign-in methods",
+      "connectedDescription": "Set a local password before removing your last sign-in method.",
+      "connectKrtl": "Connect krtl.net",
+      "empty": "No external accounts are connected.",
+      "connectedAt": "Connected {date}",
+      "remove": "Disconnect",
+      "messages": {
+        "loadFailed": "Could not load connected accounts",
+        "confirmRemove": "Disconnect {provider}? You will no longer be able to sign in with it.",
+        "removeFailed": "Could not disconnect the account",
+        "removed": "Account disconnected",
+        "lastLoginMethod": "This is your only sign-in method. Set a local password before disconnecting it.",
+        "reauthRequired": "Reauthenticate in Security Settings before disconnecting this account.",
+        "connectFailed": "Could not start the krtl.net connection."
+      },
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "Permanently delete your shikoch.in account, sessions, and linked data. This cannot be undone.",
+        "start": "Delete my account",
+        "warning": "Your account and its content cannot be recovered after deletion. Make sure you have saved anything you need.",
+        "confirmLabel": "Type DELETE to confirm",
+        "confirmPlaceholder": "DELETE",
+        "confirm": "Permanently delete account",
+        "deleting": "Deleting...",
+        "messages": {
+          "failed": "Could not delete the account. Please try again.",
+          "reauthRequired": "Reauthenticate in Security Settings before deleting your account.",
+          "deleted": "Your account has been deleted."
+        }
       }
     },
     "security": {
